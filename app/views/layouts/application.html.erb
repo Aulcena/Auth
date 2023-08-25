@@ -12,13 +12,21 @@
   </head>
 
   <body>
-  <% if !current_user.nil? %>
-  
-  <% end %>
-  
-    <h2><%= @current_user.username %></h2> 
     <nav class="main-nav">
       <h1><a href="<%= cats_url %>">99 Cats</a></h1>
+      <% if current_user.nil? %>
+        <a href="<%= new_user_url %>">Sign up!</a> 
+        <a href="<%= new_session_url %>">Sign in!</a>≈
+        <% else %>
+        <%= current_user.username %>
+        <form action="<%= session_url %>" method="POST">
+          <input type="hidden" 
+            name="authenticity_token" 
+            value="<%= form_authenticity_token %>">
+          <input type="hidden" name="_method" value="DELETE">
+          <input type="submit" value="logout">
+        </form>  
+  <% end %>    
     </nav>
     <main>
       <%= yield %>
