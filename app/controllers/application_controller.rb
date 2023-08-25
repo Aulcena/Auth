@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
     
     def login!(user)
         @current_user = user
-        session[:session_token] = self.session_token
+        session[:session_token] = user.reset_session_token!
     end
 
     def logout!
@@ -15,6 +15,11 @@ class ApplicationController < ActionController::Base
 
     def current_user
         return nil unless session[:session_token]
-        @current_user ||= User.find_by(session: session[:session_token] )
+        @current_user ||= User.find_by(session_token: session[:session_token] )
+    end
+
+    def require_logged_out
+        redirect_to cats_url if current_user
     end
 end
+
